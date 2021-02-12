@@ -1,6 +1,7 @@
 import * as THREE from './three.module.js';
 import { OrbitControls } from "./OrbitControls.js";
 
+const hashtag = 'lifecubeproject';
 let camera, scene, renderer;
 let mesh;
 
@@ -15,13 +16,21 @@ function init() {
 
   scene = new THREE.Scene();
 
-  const texture = new THREE.TextureLoader().load('pexels.jpg');
-
-  const geometry = new THREE.BoxGeometry(200, 200, 200);
-  const material = new THREE.MeshBasicMaterial({ map: texture });
-
-  mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
+  const loadManager = new THREE.LoadingManager();
+  const loader = new THREE.TextureLoader(loadManager);
+  loader.setPath('textures-' + hashtag + '/');
+  let materials = [];
+  for (let i = 0; i < 6; i++) {
+    materials.push(new THREE.MeshBasicMaterial({
+      map: loader.load(hashtag + '-' + i + '.jpg')}));
+    materials[i].map.minFilter = THREE.LinearMipmapLinearFilter;
+    materials[i].side = THREE.DoubleSide;
+  }
+  loadManager.onLoad = () => {
+    const geometry = new THREE.BoxGeometry(200, 200, 200);
+    mesh = new THREE.Mesh(geometry, materials);
+    scene.add(mesh);
+  }
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -29,7 +38,10 @@ function init() {
   document.body.appendChild(renderer.domElement);
 
   let controls = new OrbitControls(camera, renderer.domElement);
+  controls.maxDistance = 900;
   controls.update();
+  window.controls = controls;
+  window.camera = camera;
 
   window.addEventListener('resize', onWindowResize);
   renderer.render(scene, camera);
