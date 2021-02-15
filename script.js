@@ -32,6 +32,17 @@ function init() {
     scene.add(mesh);
   }
 
+  // https://github.com/gonchalox/itm/tree/master/hdr_images/hdr-labs/Playa_Sunrise
+  // Processed with https://matheowis.github.io/HDRI-to-CubeMap/
+  scene.background = (new THREE.CubeTextureLoader()).load([
+    'playa_cubemap/px.png',
+    'playa_cubemap/nx.png',
+    'playa_cubemap/py.png',
+    'playa_cubemap/ny.png',
+    'playa_cubemap/pz.png',
+    'playa_cubemap/nz.png'
+  ]);
+
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
