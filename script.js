@@ -35,12 +35,12 @@ function init() {
   // https://github.com/gonchalox/itm/tree/master/hdr_images/hdr-labs/Playa_Sunrise
   // Processed with https://matheowis.github.io/HDRI-to-CubeMap/
   scene.background = (new THREE.CubeTextureLoader()).load([
-    'playa_cubemap/px.png',
-    'playa_cubemap/nx.png',
-    'playa_cubemap/py.png',
-    'playa_cubemap/ny.png',
-    'playa_cubemap/pz.png',
-    'playa_cubemap/nz.png'
+    'starfield_cubemap_512/px.png',
+    'starfield_cubemap_512/nx.png',
+    'starfield_cubemap_512/py.png',
+    'starfield_cubemap_512/ny.png',
+    'starfield_cubemap_512/pz.png',
+    'starfield_cubemap_512/nz.png'
   ]);
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
