@@ -32,8 +32,9 @@ function init() {
     scene.add(mesh);
   }
 
-  // https://github.com/gonchalox/itm/tree/master/hdr_images/hdr-labs/Playa_Sunrise
-  // Processed with https://matheowis.github.io/HDRI-to-CubeMap/
+  // Source: https://svs.gsfc.nasa.gov/4851
+  // Processed with https://viewer.openhdr.org/ and
+  // https://matheowis.github.io/HDRI-to-CubeMap/
   scene.background = (new THREE.CubeTextureLoader()).load([
     'starfield_cubemap_512/px.png',
     'starfield_cubemap_512/nx.png',
