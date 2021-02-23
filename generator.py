@@ -7,10 +7,12 @@ HASHTAG = 'lifecubeproject'
 LIMIT = None
 MAX_RES = 4096
 
+password = os.environ.get('INSTA_PASSWORD')
+print("using password", password)
 imagedir = f'images-{HASHTAG}'
 outdir = f'textures-{HASHTAG}'
 os.makedirs(outdir, exist_ok=True)
-os.system(f'instaloader "#{HASHTAG}" --fast-update --no-videos --no-metadata-json --no-captions --no-profile-pic --dirname-pattern="{imagedir}"')
+os.system(f'instaloader -l justgranttestaccount -p {password} "#{HASHTAG}" --fast-update --no-videos --no-metadata-json --no-captions --no-profile-pic --dirname-pattern="{imagedir}"')
 
 files = [f for f in os.listdir(imagedir) if f.endswith('.jpg')]
 random.shuffle(files)
