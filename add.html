@@ -23,22 +23,29 @@
         let values = tags.value.split(',');
         values = values.map(v => v.trim());
         console.log("adding", tags.value, values);
-        const data = {
-          cubes: [{ hashtags: values }]};
-        fetch('https://jsonblob.com/api/' + passkey.value, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data),
-        })
+        fetch('https://jsonblob.com/api/' + passkey.value)
         .then(response => response.json())
         .then(data => {
-          console.log('tags PUT result', data);
-          window.alert("Successfully added cube");
+          data.cubes.push({ hashtags: values });
+          fetch('https://jsonblob.com/api/' + passkey.value, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log('tags PUT result', data);
+            window.alert("Successfully added cube");
+          })
+          .catch(err => {
+            console.error('error PUTting new tags', err);
+            window.alert("Error adding cube: " + err.toString());
+          });
         })
         .catch(err => {
-          console.error('error PUTting new tags', err);
+          console.error('error GETting tags', err);
           window.alert("Error adding cube: " + err.toString());
         });
       }
