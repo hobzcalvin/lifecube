@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>Add New Cube</title>
+  </head>
+  <body>
+    <h1>Add New Cube</h1>
+    <label>
+      Passkey:
+      <input type="text" id="passkey" size=50/>
+    </label>
+    <br/>
+    <label>
+      Hashtags separated by commas:
+      <input type="text" id="tags" size=70/>
+    </label>
+    <br/>
+    <button id="add">Add Cube</button>
+    <script>
+      const add = document.getElementById('add');
+      const passkey = document.getElementById('passkey');
+      const tags = document.getElementById('tags');
+      add.onclick = () => {
+        let values = tags.value.split(',');
+        values = values.map(v => v.trim());
+        console.log("adding", tags.value, values);
+        const data = {
+          cubes: [{ hashtags: values }]};
+        fetch('https://jsonblob.com/api/' + passkey.value, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('tags PUT result', data);
+          window.alert("Successfully added cube");
+        })
+        .catch(err => {
+          console.error('error PUTting new tags', err);
+          window.alert("Error adding cube: " + err.toString());
+        });
+      }
+    </script>
+  </body>
+</html>
