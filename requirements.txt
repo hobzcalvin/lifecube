@@ -1,2 +1,2 @@
 Pillow==8.0.1
-instalooter=2.4.4
+instalooter==2.4.4
