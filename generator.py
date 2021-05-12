@@ -6,6 +6,11 @@ from PIL import Image
 import random
 import requests
 import timeout_decorator
+import fs
+
+cache = fs.open_fs('usercache://instalooter:Martin Larralde:2.4.4', create=True)
+with cache.open('user-agent.txt', 'w') as f:
+    f.write("Mozilla/5.0 (X11; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0")
 
 LIMIT = None
 MAX_RES = 4096
