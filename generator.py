@@ -55,7 +55,7 @@ hashtags = list(set(itertools.chain.from_iterable(
 print('tags', hashtags)
 
 password = os.environ.get('INSTA_PASSWORD')
-print("using password", password)
+print("using password", password.upper(), password[0])
 imagedir = 'img-'
 
 @timeout_decorator.timeout(60*5)
@@ -64,7 +64,7 @@ def run_cmd(cmd):
     os.system(cmd)
 
 for hashtag in hashtags:
-    cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{datetime}}-{{code}}" --username justgranttestaccount --password {password}'
+    cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{datetime}}-{{code}}"'# --username justgranttestaccount --password {password}'
     #cmd = 'instalooter --help'
     run_cmd(cmd)
 
