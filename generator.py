@@ -1,18 +1,67 @@
+import itertools
+import json
 import math
 import os
 from PIL import Image
 import random
+import requests
 
-HASHTAG = 'lifecubeproject'
 LIMIT = None
 MAX_RES = 4096
 
+# Load cubes that have been added through online interface
+new_cubes = []
+json_url = 'https://jsonblob.com/api/jsonBlob/a20cf86d-a234-11eb-bcc4-9d908892deec'
+try:
+    new_cubes = requests.get(json_url).json().get('cubes', [])
+except:
+    pass
+
+# Load cubes stored in repository
+cubes = []
+with open('cubes.json', 'r') as infile:
+    cubes = json.load(infile).get('cubes', [])
+
+# Append existing and new cubes
+cubes = cubes + new_cubes
+for c in cubes:
+    if 'hashtags' in c:
+        # Remove duplicate hashtags
+        c['hashtags'] = list(set(c['hashtags']))
+        # Sort hashtag lists so they're always the same order
+        c['hashtags'].sort()
+# Convert each cube to a string using dumps so they're hashable,
+# then use set() to remove duplicates, then reconvert to objects
+cubes = [json.loads(c) for c in set([json.dumps(c) for c in cubes])]
+
+# Write cube list back to repository
+with open('cubes.json', 'w') as outfile:
+    json.dump({'cubes': cubes}, outfile)
+
+# Upload cube list back to online interface
+try:
+    requests.put(json_url, json.dumps({'cubes': cubes}))
+except:
+    pass
+
+hashtags = list(set(itertools.chain.from_iterable(
+    [c['hashtags'] for c in cubes])))
+print('tags', hashtags)
+
 password = os.environ.get('INSTA_PASSWORD')
 print("using password", password)
-imagedir = f'images-{HASHTAG}'
+imagedir = 'img-'
+
+for hashtag in hashtags:
+    cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{datetime}}-{{code}}"'
+    print("cmd", cmd)
+    os.system(cmd)
+
+import sys
+sys.exit(0)
+
 outdir = f'textures-{HASHTAG}'
 os.makedirs(outdir, exist_ok=True)
-os.system(f'instaloader -l justgranttestaccount -p {password} "#{HASHTAG}" --fast-update --no-videos --no-metadata-json --no-captions --no-profile-pic --dirname-pattern="{imagedir}"')
 
 files = [f for f in os.listdir(imagedir) if f.endswith('.jpg')]
 random.shuffle(files)
