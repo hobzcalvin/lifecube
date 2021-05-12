@@ -59,8 +59,8 @@ def run_cmd(cmd):
     os.system(cmd)
 
 for hashtag in hashtags:
-    cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{datetime}}-{{code}}"'
-    cmd = 'instalooter --help'
+    cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{datetime}}-{{code}}" --username justgranttestaccount --password {password}'
+    #cmd = 'instalooter --help'
     run_cmd(cmd)
 
 import sys
