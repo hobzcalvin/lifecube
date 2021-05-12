@@ -5,6 +5,7 @@ import os
 from PIL import Image
 import random
 import requests
+import timeout_decorator
 
 LIMIT = None
 MAX_RES = 4096
@@ -52,10 +53,14 @@ password = os.environ.get('INSTA_PASSWORD')
 print("using password", password)
 imagedir = 'img-'
 
-for hashtag in hashtags:
-    cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{datetime}}-{{code}}"'
+@timeout_decorator.timeout(60*5)
+def run_cmd(cmd):
     print("cmd", cmd)
     os.system(cmd)
+
+for hashtag in hashtags:
+    cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{datetime}}-{{code}}"'
+    run_cmd(cmd)
 
 import sys
 sys.exit(0)
