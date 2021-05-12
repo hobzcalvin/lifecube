@@ -60,6 +60,7 @@ def run_cmd(cmd):
 
 for hashtag in hashtags:
     cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{datetime}}-{{code}}"'
+    cmd = 'instalooter --help'
     run_cmd(cmd)
 
 import sys
