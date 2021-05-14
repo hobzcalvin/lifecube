@@ -56,57 +56,59 @@ for hashtag in hashtags:
     cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{datetime}}-{{code}}" --traceback --username justgranttestaccount --password {password}'
     os.system(cmd)
 
-import sys
-sys.exit(0)
+for c in cubes:
+    name = ','.join(c['hashtags'])
+    print('cube', name)
+    outdir = f'textures-{name}'
+    os.makedirs(outdir, exist_ok=True)
 
-outdir = f'textures-{HASHTAG}'
-os.makedirs(outdir, exist_ok=True)
-
-files = [f for f in os.listdir(imagedir) if f.endswith('.jpg')]
-random.shuffle(files)
-if LIMIT is not None:
-    files = files[:LIMIT]
-print('files', len(files))
-
-dims = [math.floor(math.sqrt(len(files)/6))] * 6
-nimg = None
-for i in range(5):
-    nimg = sum([d**2 for d in dims])
-    if nimg >= len(files):
-        break
-    dims[i] += 1
-print("dims", dims, nimg)
-if nimg > len(files):
-    files += files[:nimg-len(files)]
+    files = []
+    for h in c['hashtags']:
+        files += [os.path.join(imagedir + h, f) for f in os.listdir(imagedir + h) if f.endswith('.jpg')]
     random.shuffle(files)
+    if LIMIT is not None:
+        files = files[:LIMIT]
+    print('files', len(files))
 
-for (i,dim) in enumerate(dims):
-    dfiles = files[:dim**2]
-    files = files[dim**2:]
-    size = 0
-    for f in dfiles:
-        img = Image.open(os.path.join(imagedir, f))
-        # Only use the min of width/height because we crop to make squares
-        size = max(min(img.width, img.height), size)
-        img.close()
-    size = min(math.floor(MAX_RES / dim), size)
-    print("dim", i, dim, size)
+    dims = [math.floor(math.sqrt(len(files)/6))] * 6
+    nimg = None
+    for i in range(5):
+        nimg = sum([d**2 for d in dims])
+        if nimg >= len(files):
+            break
+        dims[i] += 1
+    print("dims", dims, nimg)
+    if nimg > len(files):
+        files += files[:nimg-len(files)]
+        random.shuffle(files)
 
-    face = Image.new('RGB', (size*dim, size*dim))
-    for (j,f) in enumerate(dfiles):
-        img = Image.open(os.path.join(imagedir, f))
-        if img.width != size or img.height != size:
-            src_size = min(img.width, img.height)
-            x = 0
-            y = 0
-            if img.width > src_size:
-                x = (img.width-src_size) // 2
-            if img.height > src_size:
-                y = (img.height-src_size) // 2
-            img = img.resize((size, size), Image.LANCZOS,
-                             (x, y, x+src_size, y+src_size))
-        row = j // dim
-        col = j - row*dim
-        face.paste(img, (row*size, col*size))
-        img.close()
-    face.save(os.path.join(outdir, f'{HASHTAG}-{i}.jpg'))
+    for (i,dim) in enumerate(dims):
+        dfiles = files[:dim**2]
+        files = files[dim**2:]
+        size = 0
+        for f in dfiles:
+            img = Image.open(f)
+            # Only use the min of width/height because we crop to make squares
+            size = max(min(img.width, img.height), size)
+            img.close()
+        size = min(math.floor(MAX_RES / dim), size)
+        print("dim", i, dim, size)
+
+        face = Image.new('RGB', (size*dim, size*dim))
+        for (j,f) in enumerate(dfiles):
+            img = Image.open(f)
+            if img.width != size or img.height != size:
+                src_size = min(img.width, img.height)
+                x = 0
+                y = 0
+                if img.width > src_size:
+                    x = (img.width-src_size) // 2
+                if img.height > src_size:
+                    y = (img.height-src_size) // 2
+                img = img.resize((size, size), Image.LANCZOS,
+                                 (x, y, x+src_size, y+src_size))
+            row = j // dim
+            col = j - row*dim
+            face.paste(img, (row*size, col*size))
+            img.close()
+        face.save(os.path.join(outdir, f'{name}-{i}.jpg'))
