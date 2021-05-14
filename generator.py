@@ -5,12 +5,6 @@ import os
 from PIL import Image
 import random
 import requests
-import timeout_decorator
-import fs
-
-cache = fs.open_fs('usercache://instalooter:Martin Larralde:2.4.4', create=True)
-with cache.open('user-agent.txt', 'w') as f:
-    f.write("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36")
 
 LIMIT = None
 MAX_RES = 4096
@@ -55,18 +49,12 @@ hashtags = list(set(itertools.chain.from_iterable(
 print('tags', hashtags)
 
 password = os.environ.get('INSTA_PASSWORD', 'foo')
-print("using password", password.upper(), password[0])
+print("using password", password)
 imagedir = 'img-'
-
-@timeout_decorator.timeout(60*5)
-def run_cmd(cmd):
-    print("cmd", cmd)
-    os.system(cmd)
 
 for hashtag in hashtags:
     cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{datetime}}-{{code}}" --traceback --username justgranttestaccount --password {password}'
-    #cmd = 'instalooter --help'
-    run_cmd(cmd)
+    os.system(cmd)
 
 import sys
 sys.exit(0)
