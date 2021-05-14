@@ -1,28 +1,26 @@
 import * as THREE from './three.module.js';
 import { OrbitControls } from "./OrbitControls.js";
 
-const hashtag = 'lifecubeproject';
-let camera, scene, renderer;
+const defaultCube = 'lifecubeproject';
+let url = new URL(document.location);
+let cube = url.searchParams.get('c') || defaultCube;
+let camera, renderer;
+const scene = new THREE.Scene();
 let mesh;
+const loadManager = new THREE.LoadingManager();
+const loader = new THREE.TextureLoader(loadManager);
 
 init();
 animate();
 
-function init() {
+function loadCube(name) {
+  cube = name;
 
-  camera = new THREE.PerspectiveCamera(
-    70, window.innerWidth / window.innerHeight, 1, 1000 );
-  camera.position.z = 400;
-
-  scene = new THREE.Scene();
-
-  const loadManager = new THREE.LoadingManager();
-  const loader = new THREE.TextureLoader(loadManager);
-  loader.setPath('textures-' + hashtag + '/');
+  loader.setPath('textures-' + cube + '/');
   let materials = [];
   for (let i = 0; i < 6; i++) {
     materials.push(new THREE.MeshBasicMaterial({
-      map: loader.load(hashtag + '-' + i + '.jpg')}));
+      map: loader.load(cube + '-' + i + '.jpg')}));
     materials[i].map.minFilter = THREE.LinearMipmapLinearFilter;
     materials[i].side = THREE.DoubleSide;
   }
@@ -31,6 +29,26 @@ function init() {
     mesh = new THREE.Mesh(geometry, materials);
     scene.add(mesh);
   }
+  loadManager.onError = () => {
+    if (cube != defaultCube) {
+      window.alert("Cube " + cube + " not found, using default " + defaultCube);
+      loadCube(defaultCube);
+    }
+  }
+}
+
+function init() {
+  // Ensure hashtags are in alphabetical order
+  const ordered = cube.split(',').sort().join();
+  if (ordered != cube) {
+    url.searchParams.set('c', ordered);
+    window.location.href = url.toString();
+  }
+  loadCube(cube);
+
+  camera = new THREE.PerspectiveCamera(
+    70, window.innerWidth / window.innerHeight, 1, 1000 );
+  camera.position.z = 400;
 
   // Source: https://svs.gsfc.nasa.gov/4851
   // Processed with https://viewer.openhdr.org/ and
