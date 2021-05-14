@@ -6,6 +6,8 @@ from PIL import Image
 import random
 import requests
 
+imagedir = 'img-'
+texturedir = 'textures-'
 LIMIT = None
 MAX_RES = 4096
 
@@ -50,7 +52,6 @@ print('tags', hashtags)
 
 password = os.environ.get('INSTA_PASSWORD', 'foo')
 print("using password", password)
-imagedir = 'img-'
 
 for hashtag in hashtags:
     cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{datetime}}-{{code}}" --traceback --username justgranttestaccount --password {password}'
@@ -59,7 +60,7 @@ for hashtag in hashtags:
 for c in cubes:
     name = ','.join(c['hashtags'])
     print('cube', name)
-    outdir = f'textures-{name}'
+    outdir = f'{texturedir}{name}'
     os.makedirs(outdir, exist_ok=True)
 
     files = []
@@ -112,3 +113,5 @@ for c in cubes:
             face.paste(img, (row*size, col*size))
             img.close()
         face.save(os.path.join(outdir, f'{name}-{i}.jpg'))
+
+os.system(f'git add cubes.json {texturedir}* {imagedir}*')
