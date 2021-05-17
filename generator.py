@@ -7,7 +7,7 @@ import random
 import requests
 
 imagedir = 'img-'
-texturedir = 'textures-'
+texturedir = 'docs/textures-'
 LIMIT = None
 MAX_RES = 4096
 
