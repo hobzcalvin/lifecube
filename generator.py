@@ -28,6 +28,8 @@ with open('cubes.json', 'r') as infile:
 cubes = cubes + new_cubes
 for c in cubes:
     if 'hashtags' in c:
+        # Remove hash
+        c['hashtags'] = [h.lstrip('#') for h in c['hashtags']]
         # Remove duplicate hashtags
         c['hashtags'] = list(set(c['hashtags']))
         # Sort hashtag lists so they're always the same order
