@@ -48,7 +48,7 @@ try:
 except:
     pass
 
-hashtags = list(set(itertools.chain.from_iterable(
+hashtags = ['thefirstonefailssodothis'] + list(set(itertools.chain.from_iterable(
     [c['hashtags'] for c in cubes])))
 print('tags', hashtags, flush=True)
 
