@@ -56,7 +56,7 @@ password = os.environ.get('INSTA_PASSWORD', 'foo')
 print("using password", password)
 
 for hashtag in hashtags:
-    cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{datetime}}-{{code}}" --traceback --username justgranttestaccount --password {password}'
+    cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{code}}" --traceback --username justgranttestaccount --password {password}'
     os.system(cmd)
 
 for c in cubes:
