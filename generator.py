@@ -50,10 +50,10 @@ except:
 
 hashtags = list(set(itertools.chain.from_iterable(
     [c['hashtags'] for c in cubes])))
-print('tags', hashtags)
+print('tags', hashtags, flush=True)
 
 password = os.environ.get('INSTA_PASSWORD', 'foo')
-print("using password", password)
+print("using password", password, flush=True)
 
 for hashtag in hashtags:
     cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{code}}" --traceback --username justgranttestaccount --password {password}'
@@ -61,7 +61,7 @@ for hashtag in hashtags:
 
 for c in cubes:
     name = ','.join(c['hashtags'])
-    print('cube', name)
+    print('cube', name, flush=True)
     outdir = f'{texturedir}{name}'
     os.makedirs(outdir, exist_ok=True)
 
@@ -71,7 +71,7 @@ for c in cubes:
     random.shuffle(files)
     if LIMIT is not None:
         files = files[:LIMIT]
-    print('files', len(files))
+    print('files', len(files), flush=True)
 
     dims = [math.floor(math.sqrt(len(files)/6))] * 6
     nimg = None
@@ -80,7 +80,7 @@ for c in cubes:
         if nimg >= len(files):
             break
         dims[i] += 1
-    print("dims", dims, nimg)
+    print("dims", dims, nimg, flush=True)
     if nimg > len(files):
         files += files[:nimg-len(files)]
         random.shuffle(files)
@@ -95,7 +95,7 @@ for c in cubes:
             size = max(min(img.width, img.height), size)
             img.close()
         size = min(math.floor(MAX_RES / dim), size)
-        print("dim", i, dim, size)
+        print("dim", i, dim, size, flush=True)
 
         face = Image.new('RGB', (size*dim, size*dim))
         for (j,f) in enumerate(dfiles):
