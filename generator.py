@@ -75,7 +75,11 @@ for c in cubes:
 
     dims = [math.floor(math.sqrt(len(files)/6))] * 6
     nimg = None
-    for i in range(5):
+    # For each cube face, increase the number of images per side by 1 until
+    # we have at least the total number of available files.
+    # This for loop should never run its course, because the break case is
+    # guaranteed to be reached when i=5.
+    for i in range(6):
         nimg = sum([d**2 for d in dims])
         if nimg >= len(files):
             break
