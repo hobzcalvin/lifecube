@@ -29,7 +29,7 @@ cubes = cubes + new_cubes
 for c in cubes:
     if 'hashtags' in c:
         # Remove hash
-        c['hashtags'] = [h.lstrip('#') for h in c['hashtags']]
+        c['hashtags'] = [h.lstrip('#').lower() for h in c['hashtags']]
         # Remove duplicate hashtags
         c['hashtags'] = list(set(c['hashtags']))
         # Sort hashtag lists so they're always the same order
@@ -72,6 +72,9 @@ for c in cubes:
     if LIMIT is not None:
         files = files[:LIMIT]
     print('files', len(files), flush=True)
+    if len(files) == 0:
+        print("no files", flush=True)
+        continue
 
     dims = [math.floor(math.sqrt(len(files)/6))] * 6
     nimg = None
