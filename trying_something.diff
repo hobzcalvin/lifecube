@@ -1,0 +1,42 @@
+diff --git a/generator.py b/generator.py
+index 50376d58..13e1101d 100644
+--- a/generator.py
++++ b/generator.py
+@@ -2,11 +2,13 @@ import itertools
+ import json
+ import math
+ import os
+-from PIL import Image
++from PIL import Image, ImageFile
+ import random
+ import requests
++ImageFile.LOAD_TRUNCATED_IMAGES = True
+ 
+ imagedir = 'img-'
++imagedir = '/Users/grantpatterson/Pictures/4K Stogram/#'
+ texturedir = 'docs/textures-'
+ LIMIT = None
+ MAX_RES = 4096
+@@ -50,14 +52,18 @@ except:
+ 
+ hashtags = ['thefirstonefailssodothis'] + list(set(itertools.chain.from_iterable(
+     [c['hashtags'] for c in cubes])))
++hashtags.sort()
+ print('tags', hashtags, flush=True)
++for t in hashtags:
++    print("#" + t + ",1,0,0,0,-1,-1,0,")
+ 
+-password = os.environ.get('INSTA_PASSWORD', 'foo')
++password = os.environ.get('INSTA_PASSWORD', 'tnuoccatsettnargtsuj!!')
+ print("using password", password, flush=True)
+ 
+-for hashtag in hashtags:
+-    cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{code}}" --traceback --username justgranttestaccount --password {password}'
+-    os.system(cmd)
++# for hashtag in hashtags:
++    # cmd = f'instalooter hashtag "{hashtag}" "{imagedir}{hashtag}" --new --template "{{code}}" --traceback --username justgranttestaccount --password {password}'
++    # print("cmd", cmd, flush=True)
++    # os.system(cmd)
+ 
+ for c in cubes:
+     name = ','.join(c['hashtags'])
